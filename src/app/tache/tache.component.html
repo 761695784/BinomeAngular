@@ -1,13 +1,23 @@
 <h1>Ajout de Tâches</h1>
-<form (ngSubmit)="addTask()">
+<!-- Formulaire pour ajout de tache  -->
+<form (ngSubmit)="addTask()">  <!-- (ngSubmit)="addTask()" pour déclencher la fonction addTask() lors du clic sur le bouton -->
+
   <label for="taskInput">Nom de la tâche</label>
+ <!-- ngModel pour lier le formulaire à la variable tache -->
   <input type="text" id="taskInput" [(ngModel)]="tache" name="taskInput" required>
+
   <label for="descriptionInput">Description de la tâche</label>
+ <!-- ngModel pour lier le formulaire à la variable description -->
   <textarea id="descriptionInput" [(ngModel)]="description" name="descriptionInput" required></textarea>
+
   <button type="submit">Ajouter</button>
 </form>
 
-<table *ngIf="tasks.length > 0">
+<button (click)="toggleShowCompleted()">
+  {{ showCompleted ? 'Afficher Toutes les Tâches' : 'Afficher Tâches Terminées' }}
+</button>
+
+<table *ngIf="getFilteredTasks().length > 0">
   <thead>
     <tr>
       <th>Nom de la tâche</th>
@@ -16,15 +26,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let task of tasks; let i = index" [ngClass]="{ 'completed': task.completed }">
+    <!-- ngFor pour parcourir les taches -->  <!-- et [ngClass]="{ 'completed': task.completed }" pour appliquer une couleur différente en fonction de si la tâche est complétée -->
+    <tr *ngFor="let task of getFilteredTasks(); let i = index" [ngClass]="{ 'completed': task.completed }">
       <td>{{ task.name }}</td>
       <td>{{ task.description }}</td>
       <td>
-        <input
-          type="checkbox"
-          [checked]="task.completed"
-          (change)="toggleCompletion(i)"
-        >
+        <input type="checkbox" [checked]="task.completed" (change)="toggleCompletion(i)">
       </td>
     </tr>
   </tbody>
